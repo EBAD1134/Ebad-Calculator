@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ebad Calculator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #eef2f7;
+    --card: #ffffff;
+    --display: #f8fafc;
+    --text: #172033;
+    --muted: #64748b;
+    --button: #e7edf5;
+    --button-hover: #dce5ef;
+    --operator: #d8e2ee;
+    --accent: #2563eb;
+    --danger: #fee2e2;
+    --danger-text: #b91c1c;
+    --border: #d7e0ea;
+}
+
+body.dark {
+    --bg: #0f172a;
+    --card: #182235;
+    --display: #0b1220;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --button: #253247;
+    --button-hover: #334155;
+    --operator: #334155;
+    --accent: #3b82f6;
+    --danger: #4a2228;
+    --danger-text: #fecaca;
+    --border: #334155;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: var(--bg);
+    color: var(--text);
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    transition: background 0.25s;
+}
+
+.app {
+    width: min(1050px, 100%);
+
+    background: var(--card);
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+
+    overflow: hidden;
+}
+
+/* HEADER */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 22px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.title {
+    font-size: 23px;
+    font-weight: bold;
+}
+
+.subtitle {
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.small-button {
+    border: none;
+
+    background: var(--button);
+
+    color: var(--text);
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.small-button:hover {
+    background: var(--button-hover);
+}
+
+/* MAIN */
+
+.main {
+    display: grid;
+
+    grid-template-columns: 1fr 280px;
+
+    gap: 18px;
+
+    padding: 18px;
+}
+
+/* CALCULATOR */
+
+.calculator {
+    min-width: 0;
+}
+
+/* EXPRESSION */
+
+.expression {
+    height: 28px;
+
+    padding: 3px 12px;
+
+    text-align: right;
+
+    color: var(--muted);
+
+    font-size: 15px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+}
+
+/* DISPLAY */
+
+.display {
+    min-height: 95px;
+
+    padding: 15px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: flex-end;
+
+    background: var(--display);
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    font-size: 38px;
+
+    font-weight: bold;
+
+    overflow: hidden;
+
+    word-break: break-all;
+}
+
+/* BUTTONS */
+
+.keys {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 9px;
+
+    margin-top: 14px;
+}
+
+.key {
+    min-height: 58px;
+
+    border: none;
+
+    border-radius: 13px;
+
+    background: var(--button);
+
+    color: var(--text);
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.12s;
+}
+
+.key:hover {
+    background: var(--button-hover);
+
+    transform: translateY(-1px);
+}
+
+.key:active {
+    transform: scale(0.96);
+}
+
+.operator {
+    background: var(--operator);
+}
+
+.equals {
+    background: var(--accent);
+
+    color: white;
+}
+
+.danger {
+    background: var(--danger);
+
+    color: var(--danger-text);
+}
+
+/* SCIENTIFIC BUTTONS */
+
+.scientific {
+    display: none;
+}
+
+body.scientific-mode .scientific {
+    display: block;
+}
+
+/* HISTORY */
+
+.history {
+    border-left: 1px solid var(--border);
+
+    padding-left: 18px;
+}
+
+.history-title {
+    margin: 4px 0 10px;
+
+    font-size: 17px;
+}
+
+.history-clear {
+    border: none;
+
+    background: var(--button);
+
+    color: var(--text);
+
+    padding: 8px 11px;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+}
+
+.history-list {
+    height: 470px;
+
+    overflow-y: auto;
+
+    margin-top: 10px;
+}
+
+.history-item {
+    padding: 10px;
+
+    border-bottom: 1px solid var(--border);
+
+    cursor: pointer;
+}
+
+.history-item:hover {
+    background: var(--display);
+
+    border-radius: 8px;
+}
+
+.history-expression {
+    font-size: 12px;
+
+    color: var(--muted);
+}
+
+.history-result {
+    margin-top: 3px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+}
+
+.empty-history {
+    margin-top: 20px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+/* MOBILE */
+
+@media (max-width: 760px) {
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .history {
+        border-left: none;
+
+        border-top: 1px solid var(--border);
+
+        padding-left: 0;
+
+        padding-top: 15px;
+    }
+
+    .history-list {
+        height: 180px;
+    }
+
+    .display {
+        font-size: 30px;
+    }
+
+    .keys {
+        gap: 7px;
+    }
+
+    .key {
+        min-height: 54px;
+
+        font-size: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+            <div class="title">
+                Ebad Calculator
+            </div>
+
+            <div class="subtitle">
+                Modern Calculator • Keyboard Ready
+            </div>
+        </div>
+
+        <div class="header-buttons">
+
+            <button
+                class="small-button"
+                onclick="toggleScientific()">
+                SCI
+            </button>
+
+            <button
+                class="small-button"
+                onclick="toggleTheme()">
+                ☾ / ☀
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <!-- CALCULATOR -->
+
+        <section class="calculator">
+
+            <div
+                id="expression"
+                class="expression">
+            </div>
+
+
+            <div
+                id="display"
+                class="display">
+                0
+            </div>
+
+
+            <!-- BUTTON GRID -->
+
+            <div class="keys">
+
+                <!-- ROW 1 -->
+
+                <button
+                    class="key danger"
+                    onclick="clearAll()">
+                    C
+                </button>
+
+                <button
+                    class="key"
+                    onclick="clearEntry()">
+                    CE
+                </button>
+
+                <button
+                    class="key"
+                    onclick="deleteLast()">
+                    DEL
+                </button>
+
+                <button
+                    class="key operator"
+                    onclick="percentage()">
+                    %
+                </button>
+
+                <button
+                    class="key operator"
+                    onclick="setOperator('/')">
+                    ÷
+                </button>
+
+
+                <!-- SCIENTIFIC -->
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('sin')">
+                    sin
+                </button>
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('cos')">
+                    cos
+                </button>
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('tan')">
+                    tan
+                </button>
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('sqrt')">
+                    √
+                </button>
+
+                <button
+                    class="key operator"
+                    onclick="setOperator('*')">
+                    ×
+                </button>
+
+
+                <!-- ROW 3 -->
+
+                <button
+                    class="key"
+                    onclick="inputNumber('7')">
+                    7
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('8')">
+                    8
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('9')">
+                    9
+                </button>
+
+                <button
+                    class="key operator"
+                    onclick="setOperator('-')">
+                    −
+                </button>
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('square')">
+                    x²
+                </button>
+
+
+                <!-- ROW 4 -->
+
+                <button
+                    class="key"
+                    onclick="inputNumber('4')">
+                    4
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('5')">
+                    5
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('6')">
+                    6
+                </button>
+
+                <button
+                    class="key operator"
+                    onclick="setOperator('+')">
+                    +
+                </button>
+
+                <button
+                    class="key scientific"
+                    onclick="scientific('log')">
+                    log
+                </button>
+
+
+                <!-- ROW 5 -->
+
+                <button
+                    class="key"
+                    onclick="inputNumber('1')">
+                    1
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('2')">
+                    2
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('3')">
+                    3
+                </button>
+
+                <button
+                    class="key"
+                    onclick="toggleSign()">
+                    +/−
+                </button>
+
+                <button
+                    class="key"
+                    onclick="copyResult()">
+                    COPY
+                </button>
+
+
+                <!-- ROW 6 -->
+
+                <button
+                    class="key"
+                    onclick="inputNumber('0')">
+                    0
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputNumber('00')">
+                    00
+                </button>
+
+                <button
+                    class="key"
+                    onclick="inputDecimal()">
+                    .
+                </button>
+
+                <button
+                    class="key"
+                    onclick="pasteResult()">
+                    PASTE
+                </button>
+
+                <button
+                    class="key equals"
+                    onclick="calculate()">
+                    =
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- HISTORY -->
+
+        <aside class="history">
+
+            <h3 class="history-title">
+                Calculation History
+            </h3>
+
+            <button
+                class="history-clear"
+                onclick="clearHistory()">
+                Clear History
+            </button>
+
+            <div
+                id="history"
+                class="history-list">
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   CALCULATOR VARIABLES
+========================================== */
+
+let current = "0";
+
+let firstNumber = null;
+
+let currentOperator = null;
+
+let waitingForNumber = false;
+
+let expression = "";
+
+
+/* ==========================================
+   ELEMENTS
+========================================== */
+
+const display =
+    document.getElementById("display");
+
+const expressionDisplay =
+    document.getElementById("expression");
+
+const historyDisplay =
+    document.getElementById("history");
+
+
+/* ==========================================
+   NUMBER FORMATTING
+========================================== */
+
+function formatNumber(number) {
+
+    if (!Number.isFinite(number)) {
+
+        return "Error";
+
+    }
+
+    let rounded =
+        Math.round(
+            (number + Number.EPSILON) * 1000000000000
+        ) / 1000000000000;
+
+
+    let string =
+        String(rounded);
+
+
+    if (string.includes("e")) {
+
+        return string;
+
+    }
+
+
+    let negative =
+        string.startsWith("-");
+
+
+    if (negative) {
+
+        string =
+            string.substring(1);
+
+    }
+
+
+    let parts =
+        string.split(".");
+
+
+    let integerPart =
+        Number(parts[0]).toLocaleString("en-US");
+
+
+    let result =
+        integerPart;
+
+
+    if (parts[1]) {
+
+        result += "." + parts[1];
+
+    }
+
+
+    if (negative) {
+
+        result =
+            "-" + result;
+
+    }
+
+
+    return result;
+}
+
+
+/* ==========================================
+   GET RAW NUMBER
+========================================== */
+
+function getNumber() {
+
+    return Number(
+        current.replace(/,/g, "")
+    );
+
+}
+
+
+/* ==========================================
+   UPDATE DISPLAY
+========================================== */
+
+function updateDisplay() {
+
+    display.textContent =
+        formatNumber(getNumber());
+
+    expressionDisplay.textContent =
+        expression;
+
+}
+
+
+/* ==========================================
+   INPUT NUMBER
+========================================== */
+
+function inputNumber(number) {
+
+    if (waitingForNumber) {
+
+        current = "0";
+
+        waitingForNumber = false;
+
+    }
+
+
+    if (
+        current === "0" &&
+        number !== "00"
+    ) {
+
+        current = number;
+
+    }
+
+    else {
+
+        if (current.length < 18) {
+
+            current += number;
+
+        }
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   DECIMAL
+========================================== */
+
+function inputDecimal() {
+
+    if (waitingForNumber) {
+
+        current = "0";
+
+        waitingForNumber = false;
+
+    }
+
+
+    if (!current.includes(".")) {
+
+        current += ".";
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   CLEAR
+========================================== */
+
+function clearAll() {
+
+    current = "0";
+
+    firstNumber = null;
+
+    currentOperator = null;
+
+    waitingForNumber = false;
+
+    expression = "";
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   CLEAR ENTRY
+========================================== */
+
+function clearEntry() {
+
+    current = "0";
+
+    waitingForNumber = false;
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   DELETE
+========================================== */
+
+function deleteLast() {
+
+    if (waitingForNumber) {
+
+        return;
+
+    }
+
+
+    if (current.length > 1) {
+
+        current =
+            current.substring(
+                0,
+                current.length - 1
+            );
+
+    }
+
+    else {
+
+        current = "0";
+
+    }
+
+
+    if (
+        current === "-" ||
+        current === ""
+    ) {
+
+        current = "0";
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   PLUS / MINUS
+========================================== */
+
+function toggleSign() {
+
+    if (current !== "0") {
+
+        if (current.startsWith("-")) {
+
+            current =
+                current.substring(1);
+
+        }
+
+        else {
+
+            current =
+                "-" + current;
+
+        }
+
+    }
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   OPERATOR SYMBOL
+========================================== */
+
+function operatorSymbol(operator) {
+
+    if (operator === "*") {
+
+        return "×";
+
+    }
+
+    if (operator === "/") {
+
+        return "÷";
+
+    }
+
+    return operator;
+
+}
+
+
+/* ==========================================
+   SET OPERATOR
+========================================== */
+
+function setOperator(operator) {
+
+    const value =
+        getNumber();
+
+
+    if (
+        currentOperator !== null &&
+        !waitingForNumber
+    ) {
+
+        calculate(false);
+
+    }
+
+
+    firstNumber =
+        getNumber();
+
+
+    currentOperator =
+        operator;
+
+
+    waitingForNumber = true;
+
+
+    expression =
+        formatNumber(firstNumber)
+        + " "
+        + operatorSymbol(operator);
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   CALCULATE
+========================================== */
+
+function calculate(saveHistory = true) {
+
+    if (
+        currentOperator === null ||
+        firstNumber === null
+    ) {
+
+        return;
+
+    }
+
+
+    const secondNumber =
+        getNumber();
+
+
+    let result;
+
+
+    if (currentOperator === "+") {
+
+        result =
+            firstNumber + secondNumber;
+
+    }
+
+
+    else if (currentOperator === "-") {
+
+        result =
+            firstNumber - secondNumber;
+
+    }
+
+
+    else if (currentOperator === "*") {
+
+        result =
+            firstNumber * secondNumber;
+
+    }
+
+
+    else if (currentOperator === "/") {
+
+        if (secondNumber === 0) {
+
+            result = NaN;
+
+        }
+
+        else {
+
+            result =
+                firstNumber / secondNumber;
+
+        }
+
+    }
+
+
+    expression =
+        formatNumber(firstNumber)
+        + " "
+        + operatorSymbol(currentOperator)
+        + " "
+        + formatNumber(secondNumber);
+
+
+    current =
+        String(result);
+
+
+    firstNumber = null;
+
+    currentOperator = null;
+
+    waitingForNumber = true;
+
+
+    updateDisplay();
+
+
+    if (saveHistory) {
+
+        addHistory(
+            expression,
+            formatNumber(result)
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   PERCENTAGE
+========================================== */
+
+function percentage() {
+
+    let value =
+        getNumber();
+
+
+    if (
+        firstNumber !== null &&
+        currentOperator !== null
+    ) {
+
+        if (
+            currentOperator === "+" ||
+            currentOperator === "-"
+        ) {
+
+            value =
+                firstNumber *
+                value /
+                100;
+
+        }
+
+        else {
+
+            value =
+                value / 100;
+
+        }
+
+    }
+
+    else {
+
+        value =
+            value / 100;
+
+    }
+
+
+    current =
+        String(value);
+
+
+    waitingForNumber = true;
+
+
+    updateDisplay();
+
+}
+
+
+/* ==========================================
+   SCIENTIFIC FUNCTIONS
+========================================== */
+
+function scientific(functionName) {
+
+    const value =
+        getNumber();
+
+
+    let result;
+
+
+    if (functionName === "sin") {
+
+        result =
+            Math.sin(
+                value * Math.PI / 180
+            );
+
+    }
+
+
+    else if (functionName === "cos") {
+
+        result =
+            Math.cos(
+                value * Math.PI / 180
+            );
+
+    }
+
+
+    else if (functionName === "tan") {
+
+        result =
+            Math.tan(
+                value * Math.PI / 180
+            );
+
+    }
+
+
+    else if (functionName === "sqrt") {
+
+        result =
+            Math.sqrt(value);
+
+    }
+
+
+    else if (functionName === "square") {
+
+        result =
+            value * value;
+
+    }
+
+
+    else if (functionName === "log") {
+
+        result =
+            Math.log10(value);
+
+    }
+
+
+    expression =
+        functionName
+        + "("
+        + formatNumber(value)
+        + ")";
+
+
+    current =
+        String(result);
+
+
+    waitingForNumber = true;
+
+
+    updateDisplay();
+
+
+    addHistory(
+        expression,
+        formatNumber(result)
+    );
+
+}
+
+
+/* ==========================================
+   HISTORY
+========================================== */
+
+function addHistory(
+    calculation,
+    result
+) {
+
+    let history =
+        JSON.parse(
+            localStorage.getItem(
+                "ebadCalculatorHistory"
+            ) || "[]"
+        );
+
+
+    history.unshift({
+
+        expression: calculation,
+
+        result: result
+
+    });
+
+
+    history =
+        history.slice(0, 100);
+
+
+    localStorage.setItem(
+        "ebadCalculatorHistory",
+        JSON.stringify(history)
+    );
+
+
+    renderHistory();
+
+}
+
+
+/* ==========================================
+   SHOW HISTORY
+========================================== */
+
+function renderHistory() {
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "ebadCalculatorHistory"
+            ) || "[]"
+        );
+
+
+    if (history.length === 0) {
+
+        historyDisplay.innerHTML =
+            '<div class="empty-history">' +
+            'No calculations yet.' +
+            '</div>';
+
+        return;
+
+    }
+
+
+    historyDisplay.innerHTML =
+        history.map(
+            function(item, index) {
+
+                return `
+                    <div
+                        class="history-item"
+                        onclick="useHistory(${index})">
+
+                        <div class="history-expression">
+                            ${item.expression}
+                        </div>
+
+                        <div class="history-result">
+                            = ${item.result}
+                        </div>
+
+                    </div>
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* ==========================================
+   USE HISTORY
+========================================== */
+
+function useHistory(index) {
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "ebadCalculatorHistory"
+            ) || "[]"
+        );
+
+
+    if (history[index]) {
+
+        current =
+            history[index].result
+            .replace(/,/g, "");
+
+
+        expression =
+            history[index].expression;
+
+
+        waitingForNumber = true;
+
+
+        updateDisplay();
+
+    }
+
+}
+
+
+/* ==========================================
+   CLEAR HISTORY
+========================================== */
+
+function clearHistory() {
+
+    localStorage.removeItem(
+        "ebadCalculatorHistory"
+    );
+
+
+    renderHistory();
+
+}
+
+
+/* ==========================================
+   DARK / LIGHT MODE
+========================================== */
+
+function toggleTheme() {
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    localStorage.setItem(
+        "ebadCalculatorDark",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+
+/* ==========================================
+   SCIENTIFIC MODE
+========================================== */
+
+function toggleScientific() {
+
+    document.body.classList.toggle(
+        "scientific-mode"
+    );
+
+
+    localStorage.setItem(
+        "ebadCalculatorScientific",
+        document.body.classList.contains(
+            "scientific-mode"
+        )
+    );
+
+}
+
+
+/* ==========================================
+   COPY
+========================================== */
+
+async function copyResult() {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            formatNumber(getNumber())
+        );
+
+    }
+
+    catch (error) {
+
+        alert(
+            "Copy is not available in this browser."
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   PASTE
+========================================== */
+
+async function pasteResult() {
+
+    try {
+
+        const text =
+            await navigator.clipboard.readText();
+
+
+        const clean =
+            text.trim();
+
+
+        if (
+            /^-?\d*\.?\d+$/.test(clean)
+        ) {
+
+            current =
+                clean;
+
+            waitingForNumber = false;
+
+            updateDisplay();
+
+        }
+
+    }
+
+    catch (error) {
+
+        alert(
+            "Paste is not available in this browser."
+        );
+
+    }
+
+}
+
+
+/* ==========================================
+   KEYBOARD SUPPORT
+========================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+
+        /* NUMBERS */
+
+        if (/^\d$/.test(event.key)) {
+
+            inputNumber(event.key);
+
+            return;
+
+        }
+
+
+        /* DECIMAL */
+
+        if (event.key === ".") {
+
+            inputDecimal();
+
+            return;
+
+        }
+
+
+        /* OPERATORS */
+
+        if (
+            event.key === "+" ||
+            event.key === "-" ||
+            event.key === "*" ||
+            event.key === "/"
+        ) {
+
+            setOperator(event.key);
+
+            return;
+
+        }
+
+
+        /* PERCENT */
+
+        if (event.key === "%") {
+
+            percentage();
+
+            return;
+
+        }
+
+
+        /* ENTER */
+
+        if (
+            event.key === "Enter" ||
+            event.key === "="
+        ) {
+
+            event.preventDefault();
+
+            calculate();
+
+            return;
+
+        }
+
+
+        /* BACKSPACE */
+
+        if (event.key === "Backspace") {
+
+            deleteLast();
+
+            return;
+
+        }
+
+
+        /* ESCAPE */
+
+        if (event.key === "Escape") {
+
+            clearAll();
+
+            return;
+
+        }
+
+    }
+);
+
+
+/* ==========================================
+   LOAD SETTINGS
+========================================== */
+
+if (
+    localStorage.getItem(
+        "ebadCalculatorDark"
+    ) === "true"
+) {
+
+    document.body.classList.add(
+        "dark"
+    );
+
+}
+
+
+if (
+    localStorage.getItem(
+        "ebadCalculatorScientific"
+    ) === "true"
+) {
+
+    document.body.classList.add(
+        "scientific-mode"
+    );
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+renderHistory();
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
