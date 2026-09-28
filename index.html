@@ -1,0 +1,2537 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Calculator</title>
+
+<style>
+
+/* =====================================================
+   RESET
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #172033;
+    line-height: 1.6;
+    transition: background 0.3s, color 0.3s;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(12px);
+
+    border-bottom: 1px solid #e3e7ee;
+
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.nav-container {
+    width: 92%;
+    max-width: 1150px;
+
+    margin: auto;
+
+    min-height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: #315fa8;
+
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #303846;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: #315fa8;
+}
+
+.nav-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.nav-button {
+    border: none;
+    background: #edf2f8;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+    font-size: 17px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.hero {
+    min-height: 650px;
+
+    display: flex;
+    align-items: center;
+
+    background:
+        radial-gradient(circle at 10% 20%, rgba(80,130,220,0.16), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(80,130,220,0.12), transparent 30%);
+}
+
+.hero-container {
+    width: 92%;
+    max-width: 1150px;
+
+    margin: auto;
+
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+
+    gap: 60px;
+
+    align-items: center;
+}
+
+.hero-text h1 {
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1.05;
+
+    margin-bottom: 22px;
+}
+
+.hero-text h1 span {
+    color: #315fa8;
+}
+
+.hero-text p {
+    max-width: 600px;
+
+    font-size: 19px;
+    color: #626b7a;
+
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+    border: none;
+
+    padding: 14px 25px;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    display: inline-block;
+
+    transition: 0.2s;
+}
+
+.primary-btn {
+    background: #315fa8;
+    color: white;
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(49,95,168,0.25);
+}
+
+.secondary-btn {
+    background: white;
+    color: #315fa8;
+    border: 1px solid #d8e0eb;
+}
+
+.secondary-btn:hover {
+    transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   HERO CALCULATOR PREVIEW
+===================================================== */
+
+.preview {
+    background: white;
+
+    padding: 20px;
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 25px 60px rgba(30,50,90,0.14);
+
+    transform: rotate(1deg);
+
+    max-width: 360px;
+    width: 100%;
+
+    margin: auto;
+}
+
+.preview-display {
+    background: #f1f4f8;
+
+    border-radius: 15px;
+
+    min-height: 110px;
+
+    padding: 18px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+
+    font-size: 35px;
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+.preview-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 8px;
+}
+
+.preview-grid div {
+    height: 50px;
+
+    border-radius: 10px;
+
+    background: #edf1f6;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+}
+
+.preview-grid .blue {
+    background: #315fa8;
+    color: white;
+}
+
+
+/* =====================================================
+   GENERAL SECTION
+===================================================== */
+
+section {
+    scroll-margin-top: 80px;
+}
+
+.section {
+    padding: 90px 20px;
+}
+
+.section-container {
+    width: 92%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.section-title h2 {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.section-title p {
+    color: #697386;
+}
+
+
+/* =====================================================
+   CALCULATOR SECTION
+===================================================== */
+
+.calculator-section {
+    background: #eaf0f7;
+}
+
+.calculator-wrapper {
+    width: 100%;
+    max-width: 430px;
+
+    margin: auto;
+}
+
+.calculator {
+    width: 100%;
+
+    background: white;
+
+    padding: 18px;
+
+    border-radius: 24px;
+
+    box-shadow: 0 20px 50px rgba(20,40,70,0.15);
+}
+
+.calc-title {
+    text-align: center;
+
+    font-size: 23px;
+
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+.display-box {
+    background: #f1f4f8;
+
+    padding: 12px;
+
+    border-radius: 15px;
+
+    margin-bottom: 12px;
+}
+
+.expression {
+    height: 24px;
+
+    text-align: right;
+
+    color: #737b89;
+
+    font-size: 14px;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+}
+
+.display {
+    width: 100%;
+
+    height: 55px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    text-align: right;
+
+    font-size: 32px;
+
+    font-weight: bold;
+
+    color: #101010;
+}
+
+
+/* =====================================================
+   CALCULATOR BUTTONS
+===================================================== */
+
+.calc-button {
+    border: none;
+
+    min-height: 50px;
+
+    border-radius: 11px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.12s;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.calc-button:hover {
+    filter: brightness(0.94);
+}
+
+.calc-button:active {
+    transform: scale(0.94);
+}
+
+
+/* TOP */
+
+.top-controls {
+    display: grid;
+
+    grid-template-columns: repeat(5, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+}
+
+.utility {
+    background: #dce3eb;
+}
+
+
+/* SCIENTIFIC */
+
+.scientific-row {
+    display: none;
+
+    grid-template-columns: repeat(6, 1fr);
+
+    gap: 7px;
+
+    margin-bottom: 10px;
+}
+
+.scientific-row.show {
+    display: grid;
+}
+
+.scientific {
+    background: #dcd6f3;
+
+    color: #35296a;
+
+    min-height: 43px;
+
+    font-size: 14px;
+}
+
+
+/* MAIN */
+
+.main-keypad {
+    display: grid;
+
+    grid-template-columns: 3fr 1fr;
+
+    gap: 9px;
+}
+
+.number-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 8px;
+}
+
+.number {
+    background: #edf1f6;
+}
+
+.extra {
+    background: #dfe5ec;
+
+    font-size: 14px;
+}
+
+
+/* OPERATORS */
+
+.operator-grid {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 8px;
+}
+
+.operator {
+    background: #cfddf0;
+
+    color: #17375e;
+
+    font-size: 21px;
+}
+
+.equals {
+    background: #315fa8;
+
+    color: white;
+
+    font-size: 25px;
+}
+
+
+/* BOTTOM */
+
+.bottom-controls {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+.bottom-button {
+    background: #dfe5ec;
+
+    min-height: 43px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+/* HISTORY */
+
+.history-panel {
+    display: none;
+
+    margin-top: 12px;
+
+    background: #f1f4f8;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    max-height: 190px;
+
+    overflow-y: auto;
+}
+
+.history-panel.show {
+    display: block;
+}
+
+.history-title {
+    font-weight: bold;
+
+    margin-bottom: 8px;
+}
+
+.history-item {
+    padding: 7px;
+
+    border-bottom: 1px solid #d2d7df;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.features {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.feature-card {
+    background: white;
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    box-shadow: 0 8px 25px rgba(20,40,70,0.07);
+
+    transition: 0.2s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 35px;
+
+    margin-bottom: 12px;
+}
+
+.feature-card h3 {
+    margin-bottom: 8px;
+}
+
+.feature-card p {
+    color: #687384;
+}
+
+
+/* =====================================================
+   ABOUT
+===================================================== */
+
+.about {
+    background: #edf2f8;
+}
+
+.about-box {
+    max-width: 850px;
+
+    margin: auto;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(20,40,70,0.07);
+}
+
+.about-box p {
+    color: #596474;
+
+    margin-bottom: 15px;
+}
+
+
+/* =====================================================
+   CONTACT
+===================================================== */
+
+.contact-box {
+    max-width: 700px;
+
+    margin: auto;
+
+    text-align: center;
+}
+
+.contact-box p {
+    color: #687384;
+
+    margin-bottom: 25px;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+    background: #172033;
+
+    color: white;
+
+    padding: 35px 20px;
+
+    text-align: center;
+}
+
+footer p {
+    color: #b9c1ce;
+}
+
+.footer-links {
+    margin-top: 10px;
+}
+
+.footer-links a {
+    color: white;
+
+    text-decoration: none;
+
+    margin: 0 8px;
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+body.dark {
+    background: #11151c;
+
+    color: #f4f6fa;
+}
+
+body.dark .navbar {
+    background: rgba(25,29,37,0.96);
+
+    border-color: #303640;
+}
+
+body.dark .logo {
+    color: #79a7ed;
+}
+
+body.dark .nav-links a {
+    color: #dce2ec;
+}
+
+body.dark .nav-button {
+    background: #303640;
+
+    color: white;
+}
+
+body.dark .hero {
+    background:
+        radial-gradient(circle at 10% 20%, rgba(80,130,220,0.12), transparent 30%);
+}
+
+body.dark .hero-text p,
+body.dark .section-title p {
+    color: #aeb7c5;
+}
+
+body.dark .preview,
+body.dark .feature-card,
+body.dark .about-box,
+body.dark .calculator {
+    background: #20252d;
+
+    color: white;
+}
+
+body.dark .preview-display,
+body.dark .display-box,
+body.dark .history-panel {
+    background: #171b21;
+}
+
+body.dark .display {
+    color: white;
+}
+
+body.dark .number {
+    background: #343a44;
+
+    color: white;
+}
+
+body.dark .utility,
+body.dark .extra,
+body.dark .bottom-button {
+    background: #3a414c;
+
+    color: white;
+}
+
+body.dark .operator {
+    background: #35475f;
+
+    color: white;
+}
+
+body.dark .scientific {
+    background: #463d69;
+
+    color: white;
+}
+
+body.dark .calculator-section,
+body.dark .about {
+    background: #171b21;
+}
+
+body.dark .feature-card p,
+body.dark .about-box p,
+body.dark .contact-box p {
+    color: #abb4c2;
+}
+
+body.dark .secondary-btn {
+    background: #242a33;
+
+    color: white;
+
+    border-color: #3a414c;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 800px) {
+
+    .hero-container {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+
+        padding: 60px 0;
+    }
+
+    .hero-text p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .preview {
+        transform: none;
+    }
+
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+}
+
+@media(max-width: 450px) {
+
+    .nav-container {
+        min-height: 60px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .hero {
+        min-height: auto;
+    }
+
+    .hero-text h1 {
+        font-size: 42px;
+    }
+
+    .section {
+        padding: 65px 12px;
+    }
+
+    .calculator {
+        padding: 12px;
+    }
+
+    .calc-button {
+        min-height: 47px;
+    }
+
+    .scientific {
+        font-size: 12px;
+    }
+
+    .display {
+        font-size: 28px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+
+<header class="navbar">
+
+<div class="nav-container">
+
+<a href="#home" class="logo">
+CALCULATOR
+</a>
+
+<ul class="nav-links">
+
+<li>
+<a href="#home">Home</a>
+</li>
+
+<li>
+<a href="#calculator">Calculator</a>
+</li>
+
+<li>
+<a href="#features">Features</a>
+</li>
+
+<li>
+<a href="#about">About</a>
+</li>
+
+<li>
+<a href="#contact">Contact</a>
+</li>
+
+</ul>
+
+<div class="nav-actions">
+
+<button
+class="nav-button"
+onclick="toggleDarkMode()"
+title="Dark mode">
+🌙
+</button>
+
+</div>
+
+</div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<section id="home" class="hero">
+
+<div class="hero-container">
+
+<div class="hero-text">
+
+<h1>
+Simple.
+<br>
+<span>Fast.</span>
+<br>
+Accurate.
+</h1>
+
+<p>
+A modern calculator designed for everyday mathematics,
+scientific calculations, quick results and easy use on
+desktop and mobile devices.
+</p>
+
+<div class="hero-buttons">
+
+<a
+href="#calculator"
+class="primary-btn">
+Open Calculator
+</a>
+
+<a
+href="#features"
+class="secondary-btn">
+Explore Features
+</a>
+
+</div>
+
+</div>
+
+
+<div class="preview">
+
+<div class="preview-display">
+1,250
+</div>
+
+<div class="preview-grid">
+
+<div>C</div>
+<div>CE</div>
+<div>DEL</div>
+<div class="blue">÷</div>
+
+<div>7</div>
+<div>8</div>
+<div>9</div>
+<div class="blue">×</div>
+
+<div>4</div>
+<div>5</div>
+<div>6</div>
+<div class="blue">−</div>
+
+<div>1</div>
+<div>2</div>
+<div>3</div>
+<div class="blue">+</div>
+
+<div>0</div>
+<div>00</div>
+<div>.</div>
+<div class="blue">=</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CALCULATOR
+===================================================== -->
+
+<section
+id="calculator"
+class="section calculator-section">
+
+<div class="section-container">
+
+<div class="section-title">
+
+<h2>Calculator</h2>
+
+<p>
+Perform basic and scientific calculations with ease.
+</p>
+
+</div>
+
+
+<div class="calculator-wrapper">
+
+<div class="calculator">
+
+<div class="calc-title">
+CALCULATOR
+</div>
+
+
+<div class="display-box">
+
+<div
+id="expression"
+class="expression">
+</div>
+
+<input
+id="display"
+class="display"
+value="0"
+readonly>
+
+</div>
+
+
+<!-- TOP -->
+
+<div class="top-controls">
+
+<button
+class="calc-button utility"
+onclick="clearAll()">
+C
+</button>
+
+<button
+class="calc-button utility"
+onclick="clearEntry()">
+CE
+</button>
+
+<button
+class="calc-button utility"
+onclick="deleteLast()">
+DEL
+</button>
+
+<button
+class="calc-button utility"
+onclick="press('%')">
+%
+</button>
+
+<button
+class="calc-button utility"
+onclick="press('/')">
+÷
+</button>
+
+</div>
+
+
+<!-- SCIENTIFIC -->
+
+<div
+id="scientificRow"
+class="scientific-row">
+
+<button
+class="calc-button scientific"
+onclick="scientific('sin')">
+sin
+</button>
+
+<button
+class="calc-button scientific"
+onclick="scientific('cos')">
+cos
+</button>
+
+<button
+class="calc-button scientific"
+onclick="scientific('tan')">
+tan
+</button>
+
+<button
+class="calc-button scientific"
+onclick="scientific('sqrt')">
+√
+</button>
+
+<button
+class="calc-button scientific"
+onclick="scientific('square')">
+x²
+</button>
+
+<button
+class="calc-button scientific"
+onclick="scientific('log')">
+log
+</button>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main-keypad">
+
+
+<div class="number-grid">
+
+<button
+class="calc-button number"
+onclick="press('7')">
+7
+</button>
+
+<button
+class="calc-button number"
+onclick="press('8')">
+8
+</button>
+
+<button
+class="calc-button number"
+onclick="press('9')">
+9
+</button>
+
+
+<button
+class="calc-button number"
+onclick="press('4')">
+4
+</button>
+
+<button
+class="calc-button number"
+onclick="press('5')">
+5
+</button>
+
+<button
+class="calc-button number"
+onclick="press('6')">
+6
+</button>
+
+
+<button
+class="calc-button number"
+onclick="press('1')">
+1
+</button>
+
+<button
+class="calc-button number"
+onclick="press('2')">
+2
+</button>
+
+<button
+class="calc-button number"
+onclick="press('3')">
+3
+</button>
+
+
+<button
+class="calc-button number"
+onclick="press('0')">
+0
+</button>
+
+<button
+class="calc-button number"
+onclick="press('00')">
+00
+</button>
+
+<button
+class="calc-button number"
+onclick="press('.')">
+.
+</button>
+
+
+<button
+class="calc-button extra"
+onclick="plusMinus()">
++/−
+</button>
+
+<button
+class="calc-button extra"
+onclick="copyDisplay()">
+COPY
+</button>
+
+<button
+class="calc-button extra"
+onclick="pasteDisplay()">
+PASTE
+</button>
+
+</div>
+
+
+<div class="operator-grid">
+
+<button
+class="calc-button operator"
+onclick="press('*')">
+×
+</button>
+
+<button
+class="calc-button operator"
+onclick="press('-')">
+−
+</button>
+
+<button
+class="calc-button operator"
+onclick="press('+')">
++
+</button>
+
+<button
+class="calc-button equals"
+onclick="calculate()">
+=
+</button>
+
+</div>
+
+
+</div>
+
+
+<!-- BOTTOM -->
+
+<div class="bottom-controls">
+
+<button
+class="bottom-button"
+onclick="toggleScientific()">
+SCI
+</button>
+
+<button
+class="bottom-button"
+onclick="toggleHistory()">
+HISTORY
+</button>
+
+<button
+class="bottom-button"
+onclick="clearHistory()">
+CLEAR HISTORY
+</button>
+
+<button
+class="bottom-button"
+onclick="saveHistory()">
+SAVE HISTORY
+</button>
+
+</div>
+
+
+<!-- HISTORY -->
+
+<div
+id="historyPanel"
+class="history-panel">
+
+<div class="history-title">
+Calculation History
+</div>
+
+<div id="historyList"></div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FEATURES
+===================================================== -->
+
+<section
+id="features"
+class="section">
+
+<div class="section-container">
+
+<div class="section-title">
+
+<h2>Features</h2>
+
+<p>
+Everything you need for quick and convenient calculations.
+</p>
+
+</div>
+
+
+<div class="features">
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+🧮
+</div>
+
+<h3>Basic Calculator</h3>
+
+<p>
+Perform addition, subtraction, multiplication,
+division and percentage calculations.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+🔬
+</div>
+
+<h3>Scientific Mode</h3>
+
+<p>
+Use sine, cosine, tangent, square root,
+square and logarithm functions.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+⌨️
+</div>
+
+<h3>Keyboard Support</h3>
+
+<p>
+Use your computer keyboard to enter numbers
+and perform calculations quickly.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+📜
+</div>
+
+<h3>Calculation History</h3>
+
+<p>
+Keep track of previous calculations directly
+inside your browser.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+🌙
+</div>
+
+<h3>Dark Mode</h3>
+
+<p>
+Switch between a comfortable light interface
+and a darker interface.
+</p>
+
+</div>
+
+
+<div class="feature-card">
+
+<div class="feature-icon">
+📱
+</div>
+
+<h3>Mobile Friendly</h3>
+
+<p>
+The calculator adapts automatically to phones,
+tablets and desktop screens.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ABOUT
+===================================================== -->
+
+<section
+id="about"
+class="section about">
+
+<div class="section-container">
+
+<div class="section-title">
+
+<h2>About</h2>
+
+<p>
+A simple calculator website built for practical everyday use.
+</p>
+
+</div>
+
+
+<div class="about-box">
+
+<p>
+This calculator provides a clean and simple interface
+for performing everyday mathematical calculations.
+</p>
+
+<p>
+It also includes scientific functions, calculation history,
+keyboard controls, copy and paste support, and light and
+dark display modes.
+</p>
+
+<p>
+The website is designed to work directly in a modern
+web browser without requiring any additional software
+or installation.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+
+<section
+id="contact"
+class="section">
+
+<div class="section-container">
+
+<div class="section-title">
+
+<h2>Contact</h2>
+
+<p>
+Have a suggestion or found something that could be improved?
+</p>
+
+</div>
+
+
+<div class="contact-box">
+
+<p>
+Your feedback can help improve the calculator and
+make it easier and more useful.
+</p>
+
+<a
+href="mailto:your-email@example.com"
+class="primary-btn">
+Send Feedback
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer>
+
+<p>
+© 2026 Calculator. All rights reserved.
+</p>
+
+<div class="footer-links">
+
+<a href="#home">Home</a>
+
+<a href="#calculator">Calculator</a>
+
+<a href="#features">Features</a>
+
+<a href="#about">About</a>
+
+<a href="#contact">Contact</a>
+
+</div>
+
+</footer>
+
+
+
+<script>
+
+/* =====================================================
+   VARIABLES
+===================================================== */
+
+let current = "0";
+let previous = "";
+let operator = "";
+let waitingForOperand = false;
+
+let history =
+JSON.parse(
+localStorage.getItem("calculatorHistory")
+) || [];
+
+
+const display =
+document.getElementById("display");
+
+const expression =
+document.getElementById("expression");
+
+
+/* =====================================================
+   DISPLAY
+===================================================== */
+
+function updateDisplay() {
+
+    display.value = formatNumber(current);
+
+}
+
+
+/* =====================================================
+   FORMAT NUMBER
+===================================================== */
+
+function formatNumber(value) {
+
+    if (value === "Error") {
+        return value;
+    }
+
+    if (value === "") {
+        return "0";
+    }
+
+    if (value.includes("e")) {
+        return value;
+    }
+
+    let negative = value.startsWith("-");
+
+    if (negative) {
+        value = value.substring(1);
+    }
+
+    let parts = value.split(".");
+
+    let integerPart = parts[0];
+
+    integerPart =
+    integerPart.replace(
+        /\B(?=(\d{3})+(?!\d))/g,
+        ","
+    );
+
+    let result = integerPart;
+
+    if (parts.length > 1) {
+        result += "." + parts[1];
+    }
+
+    return negative
+        ? "-" + result
+        : result;
+
+}
+
+
+function cleanNumber(value) {
+
+    return value.replace(/,/g, "");
+
+}
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+function press(value) {
+
+    if (
+        value >= "0" &&
+        value <= "9"
+    ) {
+
+        if (waitingForOperand) {
+
+            current = value;
+
+            waitingForOperand = false;
+
+        }
+
+        else {
+
+            if (current === "0") {
+
+                current = value;
+
+            }
+
+            else {
+
+                current += value;
+
+            }
+
+        }
+
+        updateDisplay();
+
+        return;
+    }
+
+
+    if (value === "00") {
+
+        if (waitingForOperand) {
+
+            current = "0";
+
+            waitingForOperand = false;
+
+        }
+
+        else if (current !== "0") {
+
+            current += "00";
+
+        }
+
+        updateDisplay();
+
+        return;
+    }
+
+
+    if (value === ".") {
+
+        if (waitingForOperand) {
+
+            current = "0.";
+
+            waitingForOperand = false;
+
+        }
+
+        else if (!current.includes(".")) {
+
+            current += ".";
+
+        }
+
+        updateDisplay();
+
+        return;
+    }
+
+
+    if (value === "%") {
+
+        current =
+        String(
+            parseFloat(
+                cleanNumber(current)
+            ) / 100
+        );
+
+        updateDisplay();
+
+        return;
+    }
+
+
+    if (
+        ["+","-","*","/"]
+        .includes(value)
+    ) {
+
+        if (
+            operator &&
+            !waitingForOperand
+        ) {
+
+            calculate();
+
+        }
+
+        previous =
+        cleanNumber(current);
+
+        operator = value;
+
+        waitingForOperand = true;
+
+        expression.textContent =
+        formatNumber(previous)
+        + " "
+        + operatorSymbol(value);
+
+    }
+
+}
+
+
+/* =====================================================
+   OPERATOR SYMBOL
+===================================================== */
+
+function operatorSymbol(op) {
+
+    if (op === "*") return "×";
+
+    if (op === "/") return "÷";
+
+    if (op === "-") return "−";
+
+    return "+";
+
+}
+
+
+/* =====================================================
+   CALCULATE
+===================================================== */
+
+function calculate() {
+
+    if (
+        !operator ||
+        previous === ""
+    ) {
+
+        return;
+
+    }
+
+    let a =
+    parseFloat(previous);
+
+    let b =
+    parseFloat(
+        cleanNumber(current)
+    );
+
+    let result;
+
+
+    if (operator === "+") {
+
+        result = a + b;
+
+    }
+
+    if (operator === "-") {
+
+        result = a - b;
+
+    }
+
+    if (operator === "*") {
+
+        result = a * b;
+
+    }
+
+    if (operator === "/") {
+
+        if (b === 0) {
+
+            current = "Error";
+
+            expression.textContent =
+            "Cannot divide by zero";
+
+            previous = "";
+
+            operator = "";
+
+            updateDisplay();
+
+            return;
+
+        }
+
+        result = a / b;
+
+    }
+
+
+    result =
+    Number(
+        result.toPrecision(12)
+    );
+
+
+    let calculation =
+    formatNumber(String(a))
+    + " "
+    + operatorSymbol(operator)
+    + " "
+    + formatNumber(String(b))
+    + " = "
+    + formatNumber(String(result));
+
+
+    addHistory(calculation);
+
+
+    expression.textContent =
+    calculation;
+
+
+    current =
+    String(result);
+
+    previous = "";
+
+    operator = "";
+
+    waitingForOperand = true;
+
+    updateDisplay();
+
+}
+
+
+/* =====================================================
+   CLEAR
+===================================================== */
+
+function clearAll() {
+
+    current = "0";
+
+    previous = "";
+
+    operator = "";
+
+    waitingForOperand = false;
+
+    expression.textContent = "";
+
+    updateDisplay();
+
+}
+
+
+function clearEntry() {
+
+    current = "0";
+
+    updateDisplay();
+
+}
+
+
+function deleteLast() {
+
+    if (
+        current.length <= 1
+    ) {
+
+        current = "0";
+
+    }
+
+    else {
+
+        current =
+        current.slice(0,-1);
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =====================================================
+   PLUS MINUS
+===================================================== */
+
+function plusMinus() {
+
+    if (current === "0") {
+        return;
+    }
+
+    if (
+        current.startsWith("-")
+    ) {
+
+        current =
+        current.substring(1);
+
+    }
+
+    else {
+
+        current =
+        "-" + current;
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =====================================================
+   SCIENTIFIC
+===================================================== */
+
+function scientific(type) {
+
+    let number =
+    parseFloat(
+        cleanNumber(current)
+    );
+
+
+    if (isNaN(number)) {
+        return;
+    }
+
+
+    let result;
+
+
+    if (type === "sin") {
+
+        result =
+        Math.sin(
+            number * Math.PI / 180
+        );
+
+    }
+
+
+    if (type === "cos") {
+
+        result =
+        Math.cos(
+            number * Math.PI / 180
+        );
+
+    }
+
+
+    if (type === "tan") {
+
+        result =
+        Math.tan(
+            number * Math.PI / 180
+        );
+
+    }
+
+
+    if (type === "sqrt") {
+
+        if (number < 0) {
+
+            current = "Error";
+
+            updateDisplay();
+
+            return;
+
+        }
+
+        result =
+        Math.sqrt(number);
+
+    }
+
+
+    if (type === "square") {
+
+        result =
+        number * number;
+
+    }
+
+
+    if (type === "log") {
+
+        if (number <= 0) {
+
+            current = "Error";
+
+            updateDisplay();
+
+            return;
+
+        }
+
+        result =
+        Math.log10(number);
+
+    }
+
+
+    result =
+    Number(
+        result.toPrecision(12)
+    );
+
+
+    let text;
+
+
+    if (type === "sin")
+        text = "sin(" + number + ")";
+
+    if (type === "cos")
+        text = "cos(" + number + ")";
+
+    if (type === "tan")
+        text = "tan(" + number + ")";
+
+    if (type === "sqrt")
+        text = "√(" + number + ")";
+
+    if (type === "square")
+        text = number + "²";
+
+    if (type === "log")
+        text = "log(" + number + ")";
+
+
+    let calculation =
+    text
+    + " = "
+    + formatNumber(
+        String(result)
+    );
+
+
+    addHistory(calculation);
+
+    expression.textContent =
+    calculation;
+
+    current =
+    String(result);
+
+    waitingForOperand = true;
+
+    updateDisplay();
+
+}
+
+
+/* =====================================================
+   SCIENTIFIC TOGGLE
+===================================================== */
+
+function toggleScientific() {
+
+    document
+    .getElementById("scientificRow")
+    .classList
+    .toggle("show");
+
+}
+
+
+/* =====================================================
+   HISTORY
+===================================================== */
+
+function addHistory(item) {
+
+    history.unshift(item);
+
+    if (history.length > 50) {
+
+        history.pop();
+
+    }
+
+    localStorage.setItem(
+        "calculatorHistory",
+        JSON.stringify(history)
+    );
+
+    renderHistory();
+
+}
+
+
+function renderHistory() {
+
+    const list =
+    document.getElementById(
+        "historyList"
+    );
+
+    list.innerHTML = "";
+
+
+    history.forEach(
+    function(item) {
+
+        const div =
+        document.createElement("div");
+
+        div.className =
+        "history-item";
+
+        div.textContent = item;
+
+        div.onclick =
+        function() {
+
+            const parts =
+            item.split("=");
+
+            if (
+                parts.length > 1
+            ) {
+
+                current =
+                cleanNumber(
+                    parts[
+                        parts.length - 1
+                    ].trim()
+                );
+
+                updateDisplay();
+
+            }
+
+        };
+
+
+        list.appendChild(div);
+
+    });
+
+}
+
+
+function toggleHistory() {
+
+    document
+    .getElementById(
+        "historyPanel"
+    )
+    .classList
+    .toggle("show");
+
+    renderHistory();
+
+}
+
+
+function clearHistory() {
+
+    history = [];
+
+    localStorage.removeItem(
+        "calculatorHistory"
+    );
+
+    renderHistory();
+
+}
+
+
+function saveHistory() {
+
+    if (history.length === 0) {
+
+        alert(
+            "No calculation history to save."
+        );
+
+        return;
+
+    }
+
+
+    const text =
+    history.join("\n");
+
+
+    const blob =
+    new Blob(
+        [text],
+        {
+            type: "text/plain"
+        }
+    );
+
+
+    const url =
+    URL.createObjectURL(blob);
+
+
+    const a =
+    document.createElement("a");
+
+
+    a.href = url;
+
+    a.download =
+    "Calculator_History.txt";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyDisplay() {
+
+    try {
+
+        await navigator.clipboard.writeText(
+            cleanNumber(current)
+        );
+
+    }
+
+    catch {
+
+        alert(
+            "Copy is not available."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   PASTE
+===================================================== */
+
+async function pasteDisplay() {
+
+    try {
+
+        let text =
+        await navigator.clipboard.readText();
+
+
+        text =
+        text
+        .replace(/,/g,"")
+        .trim();
+
+
+        if (!isNaN(text)) {
+
+            current = text;
+
+            updateDisplay();
+
+        }
+
+    }
+
+    catch {
+
+        alert(
+            "Paste permission was blocked."
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle(
+        "dark"
+    );
+
+
+    localStorage.setItem(
+        "calculatorDarkMode",
+        document.body.classList.contains(
+            "dark"
+        )
+    );
+
+}
+
+
+/* =====================================================
+   KEYBOARD
+===================================================== */
+
+document.addEventListener(
+"keydown",
+function(event) {
+
+    const key = event.key;
+
+
+    if (
+        (key >= "0" && key <= "9") ||
+        key === "."
+    ) {
+
+        press(key);
+
+        event.preventDefault();
+
+        return;
+
+    }
+
+
+    if (
+        key === "+" ||
+        key === "-" ||
+        key === "*" ||
+        key === "/" ||
+        key === "%"
+    ) {
+
+        press(key);
+
+        event.preventDefault();
+
+        return;
+
+    }
+
+
+    if (
+        key === "Enter" ||
+        key === "="
+    ) {
+
+        calculate();
+
+        event.preventDefault();
+
+        return;
+
+    }
+
+
+    if (
+        key === "Backspace"
+    ) {
+
+        deleteLast();
+
+        event.preventDefault();
+
+        return;
+
+    }
+
+
+    if (
+        key === "Escape"
+    ) {
+
+        clearAll();
+
+        event.preventDefault();
+
+        return;
+
+    }
+
+});
+
+
+/* =====================================================
+   LOAD SETTINGS
+===================================================== */
+
+if (
+    localStorage.getItem(
+        "calculatorDarkMode"
+    ) === "true"
+) {
+
+    document.body.classList.add(
+        "dark"
+    );
+
+}
+
+
+renderHistory();
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
