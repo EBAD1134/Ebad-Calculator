@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Calculator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#f5f7fb;
+    color:#1f2937;
+    transition:.3s;
+}
+
+body.dark{
+    background:#111827;
+    color:#f3f4f6;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+/* NAVBAR */
+.navbar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    background:#ffffff;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+    padding:15px 6%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.dark .navbar{
+    background:#1f2937;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#2563eb;
+}
+
+.nav-links{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+.nav-links a:hover{
+    color:#2563eb;
+}
+
+.theme-btn{
+    border:0;
+    background:#2563eb;
+    color:white;
+    padding:9px 13px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+/* HERO */
+.hero{
+    min-height:75vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:60px 20px;
+}
+
+.hero h1{
+    font-size:55px;
+    margin-bottom:15px;
+}
+
+.hero h1 span{
+    color:#2563eb;
+}
+
+.hero p{
+    font-size:19px;
+    max-width:650px;
+    margin:auto;
+    line-height:1.6;
+    color:#64748b;
+}
+
+.dark .hero p{
+    color:#cbd5e1;
+}
+
+.buttons{
+    margin-top:30px;
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+.btn{
+    padding:13px 23px;
+    border-radius:9px;
+    font-weight:bold;
+    display:inline-block;
+    cursor:pointer;
+}
+
+.primary{
+    background:#2563eb;
+    color:white;
+}
+
+.secondary{
+    border:2px solid #2563eb;
+    color:#2563eb;
+}
+
+/* SECTIONS */
+section{
+    padding:70px 6%;
+}
+
+.section-title{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.section-title h2{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.section-title p{
+    color:#64748b;
+}
+
+.dark .section-title p{
+    color:#cbd5e1;
+}
+
+/* CALCULATOR */
+.calculator-area{
+    display:flex;
+    justify-content:center;
+}
+
+.calculator{
+    width:370px;
+    max-width:100%;
+    background:#ffffff;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 10px 35px rgba(0,0,0,.15);
+}
+
+.dark .calculator{
+    background:#1f2937;
+}
+
+.display{
+    background:#111827;
+    color:white;
+    min-height:100px;
+    border-radius:12px;
+    padding:15px;
+    margin-bottom:15px;
+    text-align:right;
+    overflow:hidden;
+}
+
+.expression{
+    color:#94a3b8;
+    min-height:25px;
+    font-size:14px;
+}
+
+.result{
+    font-size:32px;
+    font-weight:bold;
+    margin-top:8px;
+    word-break:break-all;
+}
+
+.scientific{
+    display:none;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.scientific.show{
+    display:grid;
+}
+
+.buttons-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+}
+
+.calc-btn{
+    border:0;
+    padding:17px 8px;
+    border-radius:10px;
+    background:#e5e7eb;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.dark .calc-btn{
+    background:#374151;
+    color:white;
+}
+
+.calc-btn:hover{
+    opacity:.8;
+}
+
+.operator{
+    background:#2563eb !important;
+    color:white;
+}
+
+.equal{
+    background:#16a34a !important;
+    color:white;
+}
+
+.danger{
+    background:#dc2626 !important;
+    color:white;
+}
+
+.action{
+    background:#64748b !important;
+    color:white;
+}
+
+/* HISTORY */
+.history-box{
+    max-width:700px;
+    margin:40px auto 0;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.dark .history-box{
+    background:#1f2937;
+}
+
+.history-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:15px;
+}
+
+.history-list{
+    max-height:250px;
+    overflow:auto;
+}
+
+.history-item{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.dark .history-item{
+    border-color:#374151;
+}
+
+/* DOWNLOADS */
+.download-grid{
+    max-width:900px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:25px;
+}
+
+.download-card{
+    background:white;
+    padding:30px;
+    border-radius:18px;
+    text-align:center;
+    box-shadow:0 6px 25px rgba(0,0,0,.08);
+}
+
+.dark .download-card{
+    background:#1f2937;
+}
+
+.download-icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.download-card h3{
+    margin-bottom:10px;
+    font-size:24px;
+}
+
+.download-card p{
+    color:#64748b;
+    margin-bottom:20px;
+    line-height:1.5;
+}
+
+.dark .download-card p{
+    color:#cbd5e1;
+}
+
+.download-btn{
+    display:inline-block;
+    background:#2563eb;
+    color:white;
+    padding:12px 22px;
+    border-radius:9px;
+    font-weight:bold;
+}
+
+.download-btn:hover{
+    background:#1d4ed8;
+}
+
+/* FEATURES */
+.feature-grid{
+    max-width:1100px;
+    margin:auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.feature{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,.07);
+}
+
+.dark .feature{
+    background:#1f2937;
+}
+
+.feature h3{
+    margin-bottom:10px;
+}
+
+.feature p{
+    color:#64748b;
+    line-height:1.5;
+}
+
+.dark .feature p{
+    color:#cbd5e1;
+}
+
+/* ABOUT */
+.about{
+    max-width:850px;
+    margin:auto;
+    text-align:center;
+    line-height:1.8;
+}
+
+/* CONTACT */
+.contact{
+    max-width:700px;
+    margin:auto;
+    text-align:center;
+}
+
+.contact a{
+    color:#2563eb;
+    font-weight:bold;
+}
+
+/* FOOTER */
+footer{
+    background:#111827;
+    color:white;
+    text-align:center;
+    padding:30px;
+    margin-top:40px;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+
+    .nav-links{
+        display:none;
+    }
+
+    .hero h1{
+        font-size:40px;
+    }
+
+    .download-grid,
+    .feature-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+        MY <span>Calculator</span>
+    </div>
+
+    <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#downloads">Downloads</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+
+        <button class="theme-btn" onclick="toggleTheme()">
+            🌙
+        </button>
+    </div>
+
+</nav>
+
+
+<!-- HOME -->
+<section class="hero" id="home">
+
+    <div>
+
+        <h1>
+            Simple. <span>Fast.</span> Accurate.
+        </h1>
+
+        <p>
+            A modern calculator designed for everyday calculations,
+            scientific calculations, students, and quick results.
+        </p>
+
+        <div class="buttons">
+
+            <a href="#calculator" class="btn primary">
+                Open Calculator
+            </a>
+
+            <a href="#downloads" class="btn secondary">
+                Download App
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CALCULATOR -->
+<section id="calculator">
+
+    <div class="section-title">
+
+        <h2>Calculator</h2>
+
+        <p>
+            Perform basic and scientific calculations quickly.
+        </p>
+
+    </div>
+
+
+    <div class="calculator-area">
+
+        <div class="calculator">
+
+            <div class="display">
+
+                <div class="expression" id="expression">
+                </div>
+
+                <div class="result" id="display">
+                    0
+                </div>
+
+            </div>
+
+
+            <!-- SCIENTIFIC BUTTONS -->
+
+            <div class="scientific" id="scientificButtons">
+
+                <button class="calc-btn" onclick="scientific('sin')">
+                    sin
+                </button>
+
+                <button class="calc-btn" onclick="scientific('cos')">
+                    cos
+                </button>
+
+                <button class="calc-btn" onclick="scientific('tan')">
+                    tan
+                </button>
+
+                <button class="calc-btn" onclick="scientific('sqrt')">
+                    √
+                </button>
+
+                <button class="calc-btn" onclick="scientific('square')">
+                    x²
+                </button>
+
+                <button class="calc-btn" onclick="scientific('log')">
+                    log
+                </button>
+
+            </div>
+
+
+            <!-- CALCULATOR BUTTONS -->
+
+            <div class="buttons-grid">
+
+                <button class="calc-btn danger" onclick="clearAll()">
+                    C
+                </button>
+
+                <button class="calc-btn action" onclick="clearEntry()">
+                    CE
+                </button>
+
+                <button class="calc-btn action" onclick="deleteLast()">
+                    DEL
+                </button>
+
+                <button class="calc-btn operator" onclick="chooseOperator('%')">
+                    %
+                </button>
+
+
+                <button class="calc-btn" onclick="appendNumber('7')">
+                    7
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('8')">
+                    8
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('9')">
+                    9
+                </button>
+
+                <button class="calc-btn operator" onclick="chooseOperator('/')">
+                    ÷
+                </button>
+
+
+                <button class="calc-btn" onclick="appendNumber('4')">
+                    4
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('5')">
+                    5
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('6')">
+                    6
+                </button>
+
+                <button class="calc-btn operator" onclick="chooseOperator('*')">
+                    ×
+                </button>
+
+
+                <button class="calc-btn" onclick="appendNumber('1')">
+                    1
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('2')">
+                    2
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('3')">
+                    3
+                </button>
+
+                <button class="calc-btn operator" onclick="chooseOperator('-')">
+                    −
+                </button>
+
+
+                <button class="calc-btn" onclick="toggleSign()">
+                    +/−
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('0')">
+                    0
+                </button>
+
+                <button class="calc-btn" onclick="appendNumber('00')">
+                    00
+                </button>
+
+                <button class="calc-btn operator" onclick="chooseOperator('+')">
+                    +
+                </button>
+
+
+                <button class="calc-btn" onclick="appendDecimal()">
+                    .
+                </button>
+
+                <button class="calc-btn action" onclick="copyResult()">
+                    COPY
+                </button>
+
+                <button class="calc-btn action" onclick="pasteValue()">
+                    PASTE
+                </button>
+
+                <button class="calc-btn operator" onclick="toggleScientific()">
+                    SCI
+                </button>
+
+
+                <button class="calc-btn equal" style="grid-column:span 4" onclick="calculate()">
+                    =
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTORY -->
+
+    <div class="history-box">
+
+        <div class="history-header">
+
+            <h3>Calculation History</h3>
+
+            <button class="calc-btn danger" onclick="clearHistory()">
+                Clear
+            </button>
+
+        </div>
+
+        <div class="history-list" id="historyList">
+            No calculations yet.
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- DOWNLOADS -->
+<section id="downloads">
+
+    <div class="section-title">
+
+        <h2>Download Calculator</h2>
+
+        <p>
+            Get Ebad Calculator for your device.
+        </p>
+
+    </div>
+
+
+    <div class="download-grid">
+
+
+        <!-- WINDOWS -->
+
+        <div class="download-card">
+
+            <div class="download-icon">
+                🪟
+            </div>
+
+            <h3>Windows</h3>
+
+            <p>
+                Download the Windows desktop version
+                of MY Calculator.
+            </p>
+
+            <a
+                href="https://github.com/EBAD1134/Ebad-Calculator/releases/download/v1.0.0/Calculator-Setup.exe"
+                class="download-btn">
+                ⬇ Download Windows
+            </a>
+
+        </div>
+
+
+        <!-- ANDROID -->
+
+        <div class="download-card">
+
+            <div class="download-icon">
+                📱
+            </div>
+
+            <h3>Android</h3>
+
+            <p>
+                Download the Android application version
+                of MY Calculator.
+            </p>
+
+            <a
+                href="https://github.com/EBAD1134/Ebad-Calculator/releases/download/v3.3.1/calculator.apk"
+                class="download-btn">
+                ⬇ Download Android
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+<section id="features">
+
+    <div class="section-title">
+
+        <h2>Features</h2>
+
+        <p>
+            Everything you need for quick calculations.
+        </p>
+
+    </div>
+
+
+    <div class="feature-grid">
+
+        <div class="feature">
+
+            <h3>🧮 Basic Calculator</h3>
+
+            <p>
+                Addition, subtraction, multiplication,
+                division, percentages and more.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>🔬 Scientific Mode</h3>
+
+            <p>
+                Use sin, cos, tan, square root,
+                square and logarithm functions.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>⌨️ Keyboard Support</h3>
+
+            <p>
+                Use your computer keyboard for
+                fast calculations.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>📜 History</h3>
+
+            <p>
+                Keep track of your previous calculations.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>🌙 Dark Mode</h3>
+
+            <p>
+                Switch between light and dark themes.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <h3>📋 Copy & Paste</h3>
+
+            <p>
+                Easily copy results and paste numbers
+                into the calculator.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+<section id="about">
+
+    <div class="section-title">
+
+        <h2>About</h2>
+
+    </div>
+
+    <div class="about">
+
+        <p>
+            Ebad Calculator is a simple and modern calculator
+            created to provide fast, accurate and convenient
+            calculations for students and everyday users.
+        </p>
+
+        <br>
+
+        <p>
+            The project is available as a web calculator,
+            Windows application, and Android application.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact">
+
+    <div class="section-title">
+
+        <h2>Contact</h2>
+
+        <p>
+            Have a question or suggestion?
+        </p>
+
+    </div>
+
+
+    <div class="contact">
+
+        <p>
+            Email:
+            <a href="mailto:eur.publisher1135@gmail.com">
+                eur.publisher1135@gmail.com
+            </a>
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+
+    <p>
+        © 2026 Ebad Calculator. All rights reserved.
+    </p>
+
+</footer>
+
+
+<script>
+
+/* =========================
+   CALCULATOR VARIABLES
+========================= */
+
+let current = "0";
+let previous = null;
+let operator = null;
+let waitingForOperand = false;
+
+const display =
+    document.getElementById("display");
+
+const expression =
+    document.getElementById("expression");
+
+
+/* =========================
+   DISPLAY
+========================= */
+
+function updateDisplay(){
+
+    display.textContent = current;
+
+}
+
+
+/* =========================
+   NUMBERS
+========================= */
+
+function appendNumber(number){
+
+    if(waitingForOperand){
+
+        current = number;
+        waitingForOperand = false;
+
+    }else{
+
+        if(current === "0"){
+
+            current = number;
+
+        }else{
+
+            current += number;
+
+        }
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   DECIMAL
+========================= */
+
+function appendDecimal(){
+
+    if(waitingForOperand){
+
+        current = "0.";
+        waitingForOperand = false;
+        updateDisplay();
+        return;
+
+    }
+
+    if(!current.includes(".")){
+
+        current += ".";
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   OPERATOR
+========================= */
+
+function chooseOperator(nextOperator){
+
+    const inputValue = parseFloat(current);
+
+    if(operator && waitingForOperand){
+
+        operator = nextOperator;
+        return;
+
+    }
+
+    if(previous === null){
+
+        previous = inputValue;
+
+    }else if(operator){
+
+        const result = performCalculation(
+            previous,
+            inputValue,
+            operator
+        );
+
+        current = String(result);
+
+        previous = result;
+
+        updateDisplay();
+
+    }
+
+    waitingForOperand = true;
+
+    operator = nextOperator;
+
+    expression.textContent =
+        `${previous} ${operator}`;
+
+}
+
+
+/* =========================
+   CALCULATION
+========================= */
+
+function performCalculation(a,b,op){
+
+    switch(op){
+
+        case "+":
+            return a+b;
+
+        case "-":
+            return a-b;
+
+        case "*":
+            return a*b;
+
+        case "/":
+            return b === 0 ? "Error" : a/b;
+
+        case "%":
+            return a%b;
+
+        default:
+            return b;
+
+    }
+
+}
+
+
+/* =========================
+   EQUAL
+========================= */
+
+function calculate(){
+
+    if(operator === null || previous === null){
+        return;
+    }
+
+    const inputValue = parseFloat(current);
+
+    const result =
+        performCalculation(
+            previous,
+            inputValue,
+            operator
+        );
+
+    const oldExpression =
+        `${previous} ${operator} ${inputValue}`;
+
+    expression.textContent =
+        oldExpression + " =";
+
+    current = String(result);
+
+    addHistory(oldExpression, result);
+
+    previous = null;
+
+    operator = null;
+
+    waitingForOperand = true;
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   CLEAR
+========================= */
+
+function clearAll(){
+
+    current = "0";
+    previous = null;
+    operator = null;
+    waitingForOperand = false;
+
+    expression.textContent = "";
+
+    updateDisplay();
+
+}
+
+
+function clearEntry(){
+
+    current = "0";
+
+    updateDisplay();
+
+}
+
+
+function deleteLast(){
+
+    if(current.length > 1){
+
+        current =
+            current.slice(0,-1);
+
+    }else{
+
+        current = "0";
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   SIGN
+========================= */
+
+function toggleSign(){
+
+    if(current !== "0"){
+
+        current =
+            String(parseFloat(current) * -1);
+
+    }
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   SCIENTIFIC
+========================= */
+
+function toggleScientific(){
+
+    const box =
+        document.getElementById(
+            "scientificButtons"
+        );
+
+    box.classList.toggle("show");
+
+}
+
+
+function scientific(type){
+
+    const value =
+        parseFloat(current);
+
+    let result;
+
+    switch(type){
+
+        case "sin":
+            result =
+                Math.sin(value * Math.PI / 180);
+            break;
+
+        case "cos":
+            result =
+                Math.cos(value * Math.PI / 180);
+            break;
+
+        case "tan":
+            result =
+                Math.tan(value * Math.PI / 180);
+            break;
+
+        case "sqrt":
+            result =
+                Math.sqrt(value);
+            break;
+
+        case "square":
+            result =
+                value * value;
+            break;
+
+        case "log":
+            result =
+                Math.log10(value);
+            break;
+
+    }
+
+    expression.textContent =
+        `${type}(${value})`;
+
+    current =
+        String(result);
+
+    updateDisplay();
+
+}
+
+
+/* =========================
+   HISTORY
+========================= */
+
+let history =
+    JSON.parse(
+        localStorage.getItem(
+            "calculatorHistory"
+        ) || "[]"
+    );
+
+
+function addHistory(exp,result){
+
+    history.unshift({
+
+        expression:exp,
+        result:result
+
+    });
+
+    if(history.length > 50){
+
+        history.pop();
+
+    }
+
+    localStorage.setItem(
+        "calculatorHistory",
+        JSON.stringify(history)
+    );
+
+    renderHistory();
+
+}
+
+
+function renderHistory(){
+
+    const list =
+        document.getElementById(
+            "historyList"
+        );
+
+    if(history.length === 0){
+
+        list.textContent =
+            "No calculations yet.";
+
+        return;
+
+    }
+
+    list.innerHTML = "";
+
+    history.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "history-item";
+
+        div.innerHTML = `
+            <span>${item.expression}</span>
+            <strong>${item.result}</strong>
+        `;
+
+        list.appendChild(div);
+
+    });
+
+}
+
+
+function clearHistory(){
+
+    history = [];
+
+    localStorage.removeItem(
+        "calculatorHistory"
+    );
+
+    renderHistory();
+
+}
+
+
+/* =========================
+   COPY
+========================= */
+
+function copyResult(){
+
+    navigator.clipboard.writeText(current);
+
+}
+
+
+/* =========================
+   PASTE
+========================= */
+
+async function pasteValue(){
+
+    try{
+
+        const text =
+            await navigator.clipboard.readText();
+
+        if(text){
+
+            current = text;
+
+            updateDisplay();
+
+        }
+
+    }catch(error){
+
+        alert(
+            "Clipboard permission was not available."
+        );
+
+    }
+
+}
+
+
+/* =========================
+   DARK MODE
+========================= */
+
+function toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "darkMode",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+
+/* Restore dark mode */
+
+if(
+    localStorage.getItem("darkMode") === "true"
+){
+
+    document.body.classList.add("dark");
+
+}
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        const key = event.key;
+
+        if(/[0-9]/.test(key)){
+
+            appendNumber(key);
+
+        }
+
+        else if(key === "."){
+
+            appendDecimal();
+
+        }
+
+        else if(
+            ["+","-","*","/","%"].includes(key)
+        ){
+
+            chooseOperator(key);
+
+        }
+
+        else if(key === "Enter" || key === "="){
+
+            event.preventDefault();
+
+            calculate();
+
+        }
+
+        else if(key === "Backspace"){
+
+            deleteLast();
+
+        }
+
+        else if(key === "Escape"){
+
+            clearAll();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   ANDROID MESSAGE
+========================= */
+
+function androidComingSoon(event){
+
+    event.preventDefault();
+
+    alert(
+        "The Android version is coming soon!"
+    );
+
+}
+
+
+/* =========================
+   INITIALIZE
+========================= */
+
+updateDisplay();
+
+renderHistory();
+
+</script>
+
+</body>
+</html>
